@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-spring
+  labels:
+    app: kube-spring
+spec:
+  selector:
+    matchLabels:
+      app: kube-spring
+  template:
+    metadata:
+      labels:
+        app: kube-spring
+    spec:
+      containers:
+        - name: kube-spring
+          image: docker/kube-spring-with-k8s:v1.0.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 9999
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/application.yml
+              subPath: application.yml
+      volumes:
+        - name: config-volume
+          configMap:
+            name: kube-spring
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-spring
+  labels:
+    app: kube-spring
+spec:
+  type: LoadBalancer
+  selector:
+    app: kube-spring
+  ports:
+    - name: 9090port
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+    - name: 9999port
+      protocol: TCP
+      port: 9999
+      targetPort: 9999
+    - name: 8080port
+      protocol: TCP
+      port: 8080
+      targetPort: 8080

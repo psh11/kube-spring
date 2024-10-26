@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: kube-spring
+
+server:
+  port: 9999
+  servlet:
+    context-path: /kube
+
+logging:
+  level:
+    com.example.kubespring: debug
+    org.springframework.cloud.kubernetes: debug
+
+custom:
+  property:
+    value: "Hello k8s"
